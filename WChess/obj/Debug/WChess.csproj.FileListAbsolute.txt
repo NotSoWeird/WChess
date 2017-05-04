@@ -1,0 +1,9 @@
+D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\bin\Debug\WChess.exe.config
+D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\bin\Debug\WChess.exe
+D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\bin\Debug\WChess.pdb
+D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.csprojResolveAssemblyReference.cache
+D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.Form1.resources
+D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.Properties.Resources.resources
+D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.csproj.GenerateResource.Cache
+D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.exe
+D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.pdb
