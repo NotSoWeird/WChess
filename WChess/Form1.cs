@@ -14,6 +14,10 @@ namespace WChess
     {
         char[,] board = new char[8, 8];
         bool[,] highlight = new bool[8, 8];
+        int highlightfirstx = 0;
+        int highlightfirsty = 0;
+        char turn = 'W';
+
 
         SolidBrush[] brush = new SolidBrush[3];
         Image KingW = Image.FromFile("KingW.png");
@@ -28,6 +32,9 @@ namespace WChess
         Image RookB = Image.FromFile("RookB.png");
         Image PawnW = Image.FromFile("PawnW.png");
         Image PawnB = Image.FromFile("PawnB.png");
+
+
+
         public Form1()
         {
             InitializeComponent();
@@ -39,13 +46,37 @@ namespace WChess
 
         private void panel1_MouseClick(object sender, MouseEventArgs e)
         {
-            int x = e.X / 40;
-            int y = e.Y / 40;
+            int x = e.X / 50;
+            int y = e.Y / 50;
+            int highlightCount = 0;
 
             if (e.Button == MouseButtons.Left)
             {
-
+                highlight[x, y] = !highlight[x, y];
             }
+            for(int i = 0; i < 8; i++)
+            {
+                for(int j = 0; j < 8; j++)
+                {
+                    if(highlight[i, j])
+                    {
+                        highlightCount++;
+                    }
+                }
+            }
+            if(highlightCount == 1 ){
+                highlightfirstx = x;
+                highlightfirsty = y;
+            }else if (highlightCount == 2){
+                if (legalMove(highlightfirstx, highlightfirsty, x, y)){
+                    char piece = board[highlightfirstx, highlightfirsty];
+                    board[highlightfirstx, highlightfirsty] = '.';
+                    board[x, y] = piece;
+                }
+                highlight[x, y] = false;
+                highlight[highlightfirstx, highlightfirsty] = false;
+            }
+            panel1.Invalidate();
         }
         
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -55,29 +86,27 @@ namespace WChess
             {
                 for (int j = 0; j < 8; j++) {
                     if (i % 2 == 0){
-                        if (j % 2 == 0)
-                        {
+                        if (j % 2 == 0){
                             g.FillRectangle(brush[0], i * 50, j * 50, 50, 50);
-                        }
-                        else
-                        {
+                        } else {
                             g.FillRectangle(brush[1], i * 50, j * 50, 50, 50);
                         }
                     } else {
-                        if (j % 2 == 0)
-                        {
+                        if (j % 2 == 0){
                             g.FillRectangle(brush[1], i * 50, j * 50, 50, 50);
-                        }
-                        else
-                        {
+                        } else { 
                             g.FillRectangle(brush[0], i * 50, j * 50, 50, 50);
                         }
                     }
+                    if(highlight[i, j])
+                    {
+                        g.FillRectangle(brush[2], i * 50, j * 50, 50, 50);
+                    }
                 }           
             }
-            for (int i = 0; i < 0; i++)
+            for (int i = 0; i < 8; i++)
             {
-                for (int j = 0; j < 0; j++)
+                for (int j = 0; j < 8; j++)
                 {
                     if (board[i, j] != '.')
                     {
@@ -147,24 +176,24 @@ namespace WChess
             }
             for(int i = 0; i < 8; i++)
             {
-                board[i, 7] = 'P';
+                board[i, 6] = 'P';
             }
             board[0, 0] = 'r';
-            board[0, 1] = 'n';
-            board[0, 2] = 'b';
-            board[0, 3] = 'q';
-            board[0, 4] = 'k';
-            board[0, 5] = 'b';
-            board[0, 6] = 'n';
-            board[0, 7] = 'r';
+            board[1, 0] = 'n';
+            board[2, 0] = 'b';
+            board[3, 0] = 'q';
+            board[4, 0] = 'k';
+            board[5, 0] = 'b';
+            board[6, 0] = 'n';
+            board[7, 0] = 'r';
 
-            board[7, 0] = 'R';
-            board[7, 1] = 'N';
-            board[7, 2] = 'B';
-            board[7, 3] = 'Q';
-            board[7, 4] = 'K';
-            board[7, 5] = 'B';
-            board[7, 6] = 'N';
+            board[0, 7] = 'R';
+            board[1, 7] = 'N';
+            board[2, 7] = 'B';
+            board[3, 7] = 'Q';
+            board[4, 7] = 'K';
+            board[5, 7] = 'B';
+            board[6, 7] = 'N';
             board[7, 7] = 'R';
 
         }
@@ -185,10 +214,40 @@ namespace WChess
             Image PawnB = Image.FromFile("PawnB.png");
         }
 
-        private void placePieces()
+        private bool legalMove(int fromX, int fromY, int toX, int toY)
         {
-            
-        }
+            char pieceStart = board[fromX, fromY];
+            char pieceEnd = board[toX, toY];
+            if(pieceStart == 'p') {
+                if(toY == fromY + 1) {
+                    if(toX == fromX && board[toX, toY] == '.') {
+                        return true;
+                    } else if(board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else if(pieceStart == 'P') {
+                if (toY == fromY - 1 && toX == fromX && board[toX, toY] == '.') {
+                    return true;
+                } else if (board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if(pieceStart == 'r' || pieceStart == 'R') { 
+                if(fromX != toX) {
+
+                }else if(fromY != toY) {
+
+                }
+            } else if() {
+
+            }
+        } 
 
         private void loadBrushes()
         {
@@ -196,5 +255,18 @@ namespace WChess
             brush[1] = new SolidBrush(Color.Chocolate);
             brush[2] = new SolidBrush(Color.AliceBlue);
         }
+
+        private void button1_Click(object sender, EventArgs e) {
+            RestartPrompt prompt = new RestartPrompt();
+            if(prompt.ShowDialog() == DialogResult.OK) {
+                if(prompt.restart) {
+                    prepareArrays();
+                    panel1.Invalidate();
+                }
+            }
+            //'\u0001'
+
+        }
+
     }
 }

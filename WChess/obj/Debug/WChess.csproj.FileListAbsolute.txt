@@ -7,3 +7,13 @@ D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.Properties
 D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.csproj.GenerateResource.Cache
 D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.exe
 D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.pdb
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\bin\Debug\WChess.exe.config
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.exe
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.pdb
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\bin\Debug\WChess.exe
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\bin\Debug\WChess.pdb
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.csprojResolveAssemblyReference.cache
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.Form1.resources
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.Properties.Resources.resources
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.csproj.GenerateResource.Cache
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.RestartPrompt.resources
