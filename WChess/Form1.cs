@@ -227,25 +227,30 @@ namespace WChess
                     } else {
                         return false;
                     }
+                } else if(toY == 3){
+                    return true;
                 } else {
                     return false;
                 }
             } else if(pieceStart == 'P') {
-                if (toY == fromY - 1 && toX == fromX && board[toX, toY] == '.') {
+                if(toY == fromY - 1 && toX == fromX && board[toX, toY] == '.') {
                     return true;
-                } else if (board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
+                } else if(board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
+                    return true;
+                } else if(toY == 4) {
                     return true;
                 } else {
                     return false;
                 }
             } else if(pieceStart == 'r' || pieceStart == 'R') { 
-                if(fromX != toX) {
-
-                }else if(fromY != toY) {
-
+                if(fromX != toX || fromY != toY) {
+                    return false;
+                    
+                }else {
+                    return false;
                 }
-            } else if() {
-
+            } else {
+                return false;
             }
         } 
 
@@ -256,7 +261,7 @@ namespace WChess
             brush[2] = new SolidBrush(Color.AliceBlue);
         }
 
-        private void button1_Click(object sender, EventArgs e) {
+        private void btn_Restart_Click(object sender, EventArgs e) {
             RestartPrompt prompt = new RestartPrompt();
             if(prompt.ShowDialog() == DialogResult.OK) {
                 if(prompt.restart) {
