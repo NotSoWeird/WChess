@@ -218,6 +218,9 @@ namespace WChess
         {
             char pieceStart = board[fromX, fromY];
             char pieceEnd = board[toX, toY];
+            int checkX, checkY;
+
+            
             if(pieceStart == 'p') {
                 if(toY == fromY + 1) {
                     if(toX == fromX && board[toX, toY] == '.') {
@@ -227,7 +230,7 @@ namespace WChess
                     } else {
                         return false;
                     }
-                } else if(toY == 3){
+                } else if(toY == 3) {
                     return true;
                 } else {
                     return false;
@@ -242,11 +245,21 @@ namespace WChess
                 } else {
                     return false;
                 }
-            } else if(pieceStart == 'r' || pieceStart == 'R') { 
-                if(fromX != toX || fromY != toY) {
+            } else if(pieceStart == 'r' || pieceStart == 'R') {
+                if(fromX != toX && fromY != toY) {
                     return false;
+                } else if(fromX != toX || fromY != toY) {
+                    checkX = fromX;
+                    checkY = fromY;
                     
-                }else {
+                } else {
+                    return false;
+                }
+            } else if(pieceStart == 'b' || pieceStart == 'B') {
+                if(fromX != toX && fromY != toY) {
+                    return true;
+
+                } else {
                     return false;
                 }
             } else {
