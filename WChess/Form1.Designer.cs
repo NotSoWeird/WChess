@@ -30,6 +30,7 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.btn_Restart = new System.Windows.Forms.Button();
+            this.tbx_Debug = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // panel1
@@ -51,16 +52,26 @@
             this.btn_Restart.UseVisualStyleBackColor = true;
             this.btn_Restart.Click += new System.EventHandler(this.btn_Restart_Click);
             // 
+            // tbx_Debug
+            // 
+            this.tbx_Debug.Location = new System.Drawing.Point(419, 54);
+            this.tbx_Debug.Multiline = true;
+            this.tbx_Debug.Name = "tbx_Debug";
+            this.tbx_Debug.Size = new System.Drawing.Size(186, 205);
+            this.tbx_Debug.TabIndex = 2;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(514, 462);
+            this.ClientSize = new System.Drawing.Size(617, 462);
+            this.Controls.Add(this.tbx_Debug);
             this.Controls.Add(this.btn_Restart);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Text = "WChess";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -68,6 +79,7 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btn_Restart;
+        private System.Windows.Forms.TextBox tbx_Debug;
     }
 }
 
