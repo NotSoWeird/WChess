@@ -152,6 +152,17 @@ namespace WChess
                     }
                 }
             }
+            tbx_Debug.Text = "";
+            string row = "";
+            for(int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {
+                    row += board[j, i];
+                }
+                tbx_Debug.AppendText(row);
+                tbx_Debug.AppendText("\r\n");
+                row = "";
+            }
+
         }
 
         private void prepareArrays()
@@ -201,7 +212,6 @@ namespace WChess
         private void loadImages()
         {
             Image KingW = Image.FromFile("KingW.png");
-            Image KingB = Image.FromFile("KingB.png");
             Image QueenW = Image.FromFile("QueenW.png");
             Image QueenB = Image.FromFile("QueenB.png");
             Image BishopW = Image.FromFile("BishopW.png");
