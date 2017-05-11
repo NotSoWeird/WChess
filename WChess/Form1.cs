@@ -12,8 +12,8 @@ namespace WChess
 {
     public partial class Form1 : Form
     {
-        char[,] board = new char[8, 8];
-        bool[,] highlight = new bool[8, 8];
+        public char[,] board = new char[8, 8];
+        public bool[,] highlight = new bool[8, 8];
         int highlightfirstx = 0;
         int highlightfirsty = 0;
         char turn = 'W';
@@ -68,7 +68,7 @@ namespace WChess
                 highlightfirstx = x;
                 highlightfirsty = y;
             }else if (highlightCount == 2){
-                if (legalMove(highlightfirstx, highlightfirsty, x, y)){
+                if (move(highlightfirstx, highlightfirsty, x, y)){
                     char piece = board[highlightfirstx, highlightfirsty];
                     board[highlightfirstx, highlightfirsty] = '.';
                     board[x, y] = piece;
@@ -214,57 +214,56 @@ namespace WChess
             Image PawnB = Image.FromFile("PawnB.png");
         }
 
-        private bool legalMove(int fromX, int fromY, int toX, int toY)
+        private bool move(int fromX, int fromY, int toX, int toY)
         {
             char pieceStart = board[fromX, fromY];
             char pieceEnd = board[toX, toY];
-            int checkX, checkY;
+            CheckMove c = new CheckMove();
+            switch(pieceStart) {
+                case 'K':
 
-            
-            if(pieceStart == 'p') {
-                if(toY == fromY + 1) {
-                    if(toX == fromX && board[toX, toY] == '.') {
-                        return true;
-                    } else if(board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
+                    break;
+                case 'Q':
+                    
+                    break;
+                case 'B':
+                    
+                    break;
+                case 'N':
+                    
+                    break;
+                case 'R':
+                    
+                    break;
+                case 'P':
+                    if(c.bPawn(fromX, fromY, toX, toY)) {
                         return true;
                     } else {
                         return false;
                     }
-                } else if(toY == 3) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if(pieceStart == 'P') {
-                if(toY == fromY - 1 && toX == fromX && board[toX, toY] == '.') {
-                    return true;
-                } else if(board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
-                    return true;
-                } else if(toY == 4) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if(pieceStart == 'r' || pieceStart == 'R') {
-                if(fromX != toX && fromY != toY) {
-                    return false;
-                } else if(fromX != toX || fromY != toY) {
-                    checkX = fromX;
-                    checkY = fromY;
+                case 'k':
                     
-                } else {
-                    return false;
-                }
-            } else if(pieceStart == 'b' || pieceStart == 'B') {
-                if(fromX != toX && fromY != toY) {
-                    return true;
+                    break;
+                case 'q':
+                    
+                    break;
+                case 'b':
+                    
+                    break;
+                case 'n':
+                    
+                    break;
+                case 'r':
 
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
+                    break;
+                case 'p':
+                    if(c.wPawn(fromX, fromY, toX, toY)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
             }
+            return false;
         } 
 
         private void loadBrushes()
