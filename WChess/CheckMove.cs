@@ -19,8 +19,12 @@ namespace WChess
             if(toY == fromY + 1) {
                 if(toX == fromX && f.board[toX, toY] == '.') {
                     return true;
-                } else if(f.board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
-                    return true;
+                } else if(f.board[toX, toY] != '.') {
+                    if(toX == fromX - 1 || toX == fromX + 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 } else {
                     return false;
                 }
