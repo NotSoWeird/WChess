@@ -14,7 +14,7 @@ namespace WChess
             
         }
 
-        public bool wPawn(int fromX, int fromY, int toX, int toY, char[,] board)
+        public bool bPawn(int fromX, int fromY, int toX, int toY, char[,] board)
         {
             if(toY == fromY + 1) {
                 if(toX == fromX && board[toX, toY] == '.') {
@@ -35,7 +35,7 @@ namespace WChess
             }
         }
 
-        public bool bPawn(int fromX, int fromY, int toX, int toY, char[,] board) {
+        public bool wPawn(int fromX, int fromY, int toX, int toY, char[,] board) {
             if(toY == fromY - 1) {
                 if(toX == fromX && board[toX, toY] == '.') {
                     return true;
@@ -51,8 +51,8 @@ namespace WChess
             }
         }
 
-        public bool wRook(int fromX, int fromY, int toX, int toY, char[,] board) {
-            int dir, checkX;
+        public bool bRook(int fromX, int fromY, int toX, int toY, char[,] board) {
+            int dir, checkX, checkY;
             bool notDone;
             if(fromX != toX && fromY != toY) {
                 return false;
@@ -61,25 +61,56 @@ namespace WChess
                 checkX = fromX;
                 notDone = true;
                 if(dir < 0) {
-                    while(checkX != toX && notDone) {
-                        checkX--;
-                        if(board[checkX, fromY] != '.') {
-                            notDone = false;
-                        }
-                    }
-                    if(checkX == toX) {
-                        return true;
-                    }else {
-                        return false;
-                    }
-                } else {
-                    while(checkX != toX && notDone) {
+                    while(checkX != toX && checkX <= 1 && notDone) {
                         checkX++;
                         if(board[checkX, fromY] != '.') {
                             notDone = false;
                         }
                     }
-                    if(checkX == toX) {
+                    if(checkX >= toX) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if(checkX > 7) {
+                        while(checkX != toX && checkX >= 7 && notDone) {
+                            checkX--;
+                            if(board[checkX, fromY] != '.') {
+                                notDone = false;
+                            }
+                        }
+                    }
+                    if(checkX <= toX) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            } else if(fromX != toX) {
+                dir = fromX - toX;
+                checkY = fromY;
+                notDone = true;
+                if(dir < 0) {
+                    while(checkY != toY && checkY <= 1 && notDone) {
+                        checkY++;
+                        if(board[fromX, checkY] != '.') {
+                            notDone = false;
+                        }
+                    }
+                    if(checkY >= toY) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    while(checkY != toX && checkY >= 7 && notDone) {
+                        checkY--;
+                        if(board[fromX, checkY] != '.') {
+                            notDone = false;
+                        }
+                    }
+                    if(checkY <= toY) {
                         return true;
                     } else {
                         return false;
@@ -90,7 +121,7 @@ namespace WChess
             }
         }
 
-        public bool bRook(int fromX, int fromY, int toX, int toY, char[,] board) {
+        public bool wRook(int fromX, int fromY, int toX, int toY, char[,] board) {
             if(fromX != toX && fromY != toY) {
                 return false;
             } else if(fromX != toX || fromY != toY) {
