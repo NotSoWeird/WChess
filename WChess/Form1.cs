@@ -12,11 +12,11 @@ namespace WChess
 {
     public partial class Form1 : Form
     {
-        public char[,] board = new char[8, 8];
-        public bool[,] highlight = new bool[8, 8];
+        char[,] board = new char[8, 8];
+        bool[,] highlight = new bool[8, 8];
         int highlightfirstx = 0;
         int highlightfirsty = 0;
-        char turn = 'W';
+        //char turn = 'W';
 
 
         SolidBrush[] brush = new SolidBrush[3];
@@ -228,7 +228,7 @@ namespace WChess
         {
             char pieceStart = board[fromX, fromY];
             char pieceEnd = board[toX, toY];
-            CheckMove c = new CheckMove();
+            CheckMove checkMove = new CheckMove();
             switch(pieceStart) {
                 case 'K':
 
@@ -243,10 +243,13 @@ namespace WChess
                     
                     break;
                 case 'R':
-                    
-                    break;
+                    if(checkMove.bRook(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 case 'P':
-                    if(c.bPawn(fromX, fromY, toX, toY)) {
+                    if(checkMove.bPawn(fromX, fromY, toX, toY, board)) {
                         return true;
                     } else {
                         return false;
@@ -264,10 +267,13 @@ namespace WChess
                     
                     break;
                 case 'r':
-
-                    break;
+                    if(checkMove.wRook(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 case 'p':
-                    if(c.wPawn(fromX, fromY, toX, toY)) {
+                    if(checkMove.wPawn(fromX, fromY, toX, toY, board)) {
                         return true;
                     } else {
                         return false;

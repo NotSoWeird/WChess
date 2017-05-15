@@ -14,12 +14,12 @@ namespace WChess
             
         }
 
-        public bool wPawn(int fromX, int fromY, int toX, int toY)
+        public bool wPawn(int fromX, int fromY, int toX, int toY, char[,] board)
         {
             if(toY == fromY + 1) {
-                if(toX == fromX && f.board[toX, toY] == '.') {
+                if(toX == fromX && board[toX, toY] == '.') {
                     return true;
-                } else if(f.board[toX, toY] != '.') {
+                } else if(board[toX, toY] != '.') {
                     if(toX == fromX - 1 || toX == fromX + 1) {
                         return true;
                     } else {
@@ -35,11 +35,11 @@ namespace WChess
             }
         }
 
-        public bool bPawn(int fromX, int fromY, int toX, int toY) {
+        public bool bPawn(int fromX, int fromY, int toX, int toY, char[,] board) {
             if(toY == fromY - 1) {
-                if(toX == fromX && f.board[toX, toY] == '.') {
+                if(toX == fromX && board[toX, toY] == '.') {
                     return true;
-                } else if(f.board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
+                } else if(board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
                     return true;
                 } else {
                     return false;
@@ -51,8 +51,8 @@ namespace WChess
             }
         }
 
-        public bool wRook(int fromX, int fromY, int toX, int toY) {
-            int dir, checkX, checkY;
+        public bool wRook(int fromX, int fromY, int toX, int toY, char[,] board) {
+            int dir, checkX;
             bool notDone;
             if(fromX != toX && fromY != toY) {
                 return false;
@@ -63,7 +63,7 @@ namespace WChess
                 if(dir < 0) {
                     while(checkX != toX && notDone) {
                         checkX--;
-                        if(f.board[checkX, fromY] != '.') {
+                        if(board[checkX, fromY] != '.') {
                             notDone = false;
                         }
                     }
@@ -75,7 +75,7 @@ namespace WChess
                 } else {
                     while(checkX != toX && notDone) {
                         checkX++;
-                        if(f.board[checkX, fromY] != '.') {
+                        if(board[checkX, fromY] != '.') {
                             notDone = false;
                         }
                     }
@@ -90,7 +90,7 @@ namespace WChess
             }
         }
 
-        public bool bRook(int fromX, int fromY, int toX, int toY) {
+        public bool bRook(int fromX, int fromY, int toX, int toY, char[,] board) {
             if(fromX != toX && fromY != toY) {
                 return false;
             } else if(fromX != toX || fromY != toY) {
