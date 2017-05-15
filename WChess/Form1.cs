@@ -12,11 +12,11 @@ namespace WChess
 {
     public partial class Form1 : Form
     {
-        public char[,] board = new char[8, 8];
-        public bool[,] highlight = new bool[8, 8];
+        char[,] board = new char[8, 8];
+        bool[,] highlight = new bool[8, 8];
         int highlightfirstx = 0;
         int highlightfirsty = 0;
-        char turn = 'W';
+        //char turn = 'W';
 
 
         SolidBrush[] brush = new SolidBrush[3];
@@ -68,7 +68,7 @@ namespace WChess
                 highlightfirstx = x;
                 highlightfirsty = y;
             }else if (highlightCount == 2){
-                if (move(highlightfirstx, highlightfirsty, x, y)){
+                if (movePiece(highlightfirstx, highlightfirsty, x, y)){
                     char piece = board[highlightfirstx, highlightfirsty];
                     board[highlightfirstx, highlightfirsty] = '.';
                     board[x, y] = piece;
@@ -193,18 +193,18 @@ namespace WChess
             board[1, 0] = 'n';
             board[2, 0] = 'b';
             board[3, 0] = 'q';
-            board[4, 0] = 'k';
-            board[5, 0] = 'b';
-            board[6, 0] = 'n';
+            //board[4, 0] = 'k';
+            //board[5, 0] = 'b';
+            //board[6, 0] = 'n';
             board[7, 0] = 'r';
 
             board[0, 7] = 'R';
             board[1, 7] = 'N';
             board[2, 7] = 'B';
             board[3, 7] = 'Q';
-            board[4, 7] = 'K';
-            board[5, 7] = 'B';
-            board[6, 7] = 'N';
+            //board[4, 7] = 'K';
+            //board[5, 7] = 'B';
+            //board[6, 7] = 'N';
             board[7, 7] = 'R';
 
         }
@@ -224,12 +224,11 @@ namespace WChess
             Image PawnB = Image.FromFile("PawnB.png");
         }
 
-        private bool move(int fromX, int fromY, int toX, int toY)
+        private bool movePiece(int fromX, int fromY, int toX, int toY)
         {
-            char pieceStart = board[fromX, fromY];
-            char pieceEnd = board[toX, toY];
-            CheckMove c = new CheckMove();
-            switch(pieceStart) {
+            CheckMove checkMove = new CheckMove();
+            char piece = board[fromX, fromY];
+            switch(piece) {
                 case 'K':
 
                     break;
@@ -243,10 +242,13 @@ namespace WChess
                     
                     break;
                 case 'R':
-                    
-                    break;
+                    if(checkMove.wRook(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 case 'P':
-                    if(c.bPawn(fromX, fromY, toX, toY)) {
+                    if(checkMove.wPawn(fromX, fromY, toX, toY, board)) {
                         return true;
                     } else {
                         return false;
@@ -264,10 +266,13 @@ namespace WChess
                     
                     break;
                 case 'r':
-
-                    break;
+                    if(checkMove.bRook(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 case 'p':
-                    if(c.wPawn(fromX, fromY, toX, toY)) {
+                    if(checkMove.bPawn(fromX, fromY, toX, toY, board)) {
                         return true;
                     } else {
                         return false;
