@@ -28,7 +28,7 @@ namespace WChess
                 } else {
                     return false;
                 }
-            } else if(toY == 3) {
+            } else if(toY == 3 && board[toX, toY] == '.' && board[toX, 2] == '.') {
                 return true;
             } else {
                 return false;
@@ -44,7 +44,7 @@ namespace WChess
                 } else {
                     return false;
                 }
-            } else if(toY == 4) {
+            } else if(toY == 4 && board[toX, toY] == '.' && board[toX, 5] == '.') {
                 return true;
             } else {
                 return false;
@@ -52,84 +52,434 @@ namespace WChess
         }
 
         public bool bRook(int fromX, int fromY, int toX, int toY, char[,] board) {
-            int dir, checkX, checkY;
-            bool notDone;
+            int checkX, checkY;
             if(fromX != toX && fromY != toY) {
                 return false;
             } else if(fromX != toX) {
-                dir = fromX - toX;
-                checkX = fromX;
-                notDone = true;
-                if(dir < 0) {
-                    while(checkX != toX && checkX <= 1 && notDone) {
+                if((toX - fromX) > 0) {
+                    checkX = fromX + 1;
+                    while(checkX < toX && board[checkX, toY] == '.') {
                         checkX++;
-                        if(board[checkX, fromY] != '.') {
-                            notDone = false;
-                        }
                     }
-                    if(checkX >= toX) {
+                    if(checkX == toX && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
                         return true;
-                    } else {
-                        return false;
                     }
                 } else {
-                    if(checkX > 7) {
-                        while(checkX != toX && checkX >= 7 && notDone) {
-                            checkX--;
-                            if(board[checkX, fromY] != '.') {
-                                notDone = false;
-                            }
-                        }
+                    checkX = fromX - 1;
+                    while(checkX > toX && board[checkX, toY] == '.') {
+                        checkX--;
                     }
-                    if(checkX <= toX) {
+                    if(checkX == toX && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
                         return true;
-                    } else {
-                        return false;
                     }
                 }
-            } else if(fromX != toX) {
-                dir = fromX - toX;
-                checkY = fromY;
-                notDone = true;
-                if(dir < 0) {
-                    while(checkY != toY && checkY <= 1 && notDone) {
+                return false;
+            } else if(fromY != toY) {
+                if((toY - fromY) > 0) {
+                    checkY = fromY + 1;
+                    while(checkY < toY && board[toX, checkY] == '.') {
                         checkY++;
-                        if(board[fromX, checkY] != '.') {
-                            notDone = false;
-                        }
                     }
-                    if(checkY >= toY) {
+                    if(checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
                         return true;
-                    } else {
-                        return false;
                     }
                 } else {
-                    while(checkY != toX && checkY >= 7 && notDone) {
+                    checkY = fromY - 1;
+                    while(checkY > toY && board[toX, checkY] == '.') {
                         checkY--;
-                        if(board[fromX, checkY] != '.') {
-                            notDone = false;
-                        }
                     }
-                    if(checkY <= toY) {
+                    if(checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
                         return true;
-                    } else {
-                        return false;
                     }
                 }
+                return false;
             } else {
                 return false;
             }
         }
 
         public bool wRook(int fromX, int fromY, int toX, int toY, char[,] board) {
+            int checkX, checkY;
             if(fromX != toX && fromY != toY) {
                 return false;
-            } else if(fromX != toX || fromY != toY) {
-                
+            } else if(fromX != toX) {
+                if((toX - fromX) > 0) {
+                    checkX = fromX + 1;
+                    while(checkX < toX && board[checkX, toY] == '.') {
+                        checkX++;
+                    }
+                    if(checkX == toX && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                } else {
+                    checkX = fromX - 1;
+                    while(checkX > toX && board[checkX, toY] == '.') {
+                        checkX--;
+                    }
+                    if(checkX == toX && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                }
+                return false;
+            } else if(fromY != toY) {
+                if((toY - fromY) > 0) {
+                    checkY = fromY + 1;
+                    while(checkY < toY && board[toX, checkY] == '.') {
+                        checkY++;
+                    }
+                    if(checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                } else {
+                    checkY = fromY - 1;
+                    while(checkY > toY && board[toX, checkY] == '.') {
+                        checkY--;
+                    }
+                    if(checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                }
                 return false;
             } else {
                 return false;
             }
+        }
+
+        public bool wKnight(int fromX, int fromY, int toX, int toY, char[,] board) {
+            if((toX == fromX + 2 && (toY == fromY + 1 || toY == fromY - 1)) || (toX == fromX - 2 && (toY == fromY + 1 || toY == fromY - 1))) {
+                if(board[toX, toY] == '.' || char.IsLower(board[toX, toY])) {
+                    return true;
+                } else {
+                    return false;
+                }  
+            } else if((toY == fromY + 2 && (toX == fromX + 1 || toX == fromX - 1)) || (toY == fromY - 2 && (toX == fromX + 1 || toX == fromX - 1))) {
+                if(board[toX, toY] == '.' || char.IsLower(board[toX, toY])) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        public bool bKnight(int fromX, int fromY, int toX, int toY, char[,] board) {
+            if((toX == fromX + 2 && (toY == fromY + 1 || toY == fromY - 1)) || (toX == fromX - 2 && (toY == fromY + 1 || toY == fromY - 1))) {
+                if(board[toX, toY] == '.' || char.IsUpper(board[toX, toY])) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if((toY == fromY + 2 && (toX == fromX + 1 || toX == fromX - 1)) || (toY == fromY - 2 && (toX == fromX + 1 || toX == fromX - 1))) {
+                if(board[toX, toY] == '.' || char.IsUpper(board[toX, toY])) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        public bool wBishop(int fromX, int fromY, int toX, int toY, char[,] board) {
+            if(fromX != toX && fromY != toY) {
+                int checkX, checkY;
+                if((toX - fromX) > 0) {
+                    if((toY - fromY) > 0) {
+                        checkX = fromX + 1;
+                        checkY = fromY + 1;
+                        while(checkX < toX && checkY < toY && board[checkX, checkY] == '.') {
+                            checkX++;
+                            checkY++;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    } else {
+                        checkX = fromX + 1;
+                        checkY = fromY - 1;
+                        while(checkX < toX && checkY > toY && board[checkX, checkY] == '.') {
+                            checkX++;
+                            checkY--;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if((toY - fromY) > 0) {
+                        checkX = fromX - 1;
+                        checkY = fromY + 1;
+                        while(checkX > toX && checkY < toY && board[checkX, checkY] == '.') {
+                            checkX--;
+                            checkY++;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    } else {
+                        checkX = fromX - 1;
+                        checkY = fromY - 1;
+                        while(checkX > toX && checkY > toY && board[checkX, checkY] == '.') {
+                            checkX--;
+                            checkY--;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            } else {
+                return false;
+            }
+        }
+
+        public bool bBishop(int fromX, int fromY, int toX, int toY, char[,] board) {
+            if(fromX != toX && fromY != toY) {
+                int checkX, checkY;
+                if((toX - fromX) > 0) {
+                    if((toY - fromY) > 0) {
+                        checkX = fromX + 1;
+                        checkY = fromY + 1;
+                        while(checkX < toX && checkY < toY && board[checkX, checkY] == '.') {
+                            checkX++;
+                            checkY++;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    } else {
+                        checkX = fromX + 1;
+                        checkY = fromY - 1;
+                        while(checkX < toX && checkY > toY && board[checkX, checkY] == '.') {
+                            checkX++;
+                            checkY--;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if((toY - fromY) > 0) {
+                        checkX = fromX - 1;
+                        checkY = fromY + 1;
+                        while(checkX > toX && checkY < toY && board[checkX, checkY] == '.') {
+                            checkX--;
+                            checkY++;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    } else {
+                        checkX = fromX - 1;
+                        checkY = fromY - 1;
+                        while(checkX > toX && checkY > toY && board[checkX, checkY] == '.') {
+                            checkX--;
+                            checkY--;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            } else {
+                return false;
+            }
+        }
+
+        public bool wQueen(int fromX, int fromY, int toX, int toY, char[,] board) {
+            int checkX, checkY;
+            if(fromX != toX && fromY != toY) {
+                if((toX - fromX) > 0) {
+                    if((toY - fromY) > 0) {
+                        checkX = fromX + 1;
+                        checkY = fromY + 1;
+                        while(checkX < toX && checkY < toY && board[checkX, checkY] == '.') {
+                            checkX++;
+                            checkY++;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    } else {
+                        checkX = fromX + 1;
+                        checkY = fromY - 1;
+                        while(checkX < toX && checkY > toY && board[checkX, checkY] == '.') {
+                            checkX++;
+                            checkY--;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if((toY - fromY) > 0) {
+                        checkX = fromX - 1;
+                        checkY = fromY + 1;
+                        while(checkX > toX && checkY < toY && board[checkX, checkY] == '.') {
+                            checkX--;
+                            checkY++;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    } else {
+                        checkX = fromX - 1;
+                        checkY = fromY - 1;
+                        while(checkX > toX && checkY > toY && board[checkX, checkY] == '.') {
+                            checkX--;
+                            checkY--;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    }
+                }
+            } else if(fromX != toX) {
+                if((toX - fromX) > 0) {
+                    checkX = fromX + 1;
+                    while(checkX < toX && board[checkX, toY] == '.') {
+                        checkX++;
+                    }
+                    if(checkX == toX && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                } else {
+                    checkX = fromX - 1;
+                    while(checkX > toX && board[checkX, toY] == '.') {
+                        checkX--;
+                    }
+                    if(checkX == toX && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                }
+                return false;
+            } else if(fromY != toY) {
+                if((toY - fromY) > 0) {
+                    checkY = fromY + 1;
+                    while(checkY < toY && board[toX, checkY] == '.') {
+                        checkY++;
+                    }
+                    if(checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                } else {
+                    checkY = fromY - 1;
+                    while(checkY > toY && board[toX, checkY] == '.') {
+                        checkY--;
+                    }
+                    if(checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return false;
+        }
+
+        public bool bQueen(int fromX, int fromY, int toX, int toY, char[,] board) {
+            int checkX, checkY;
+            if(fromX != toX && fromY != toY) {
+                if((toX - fromX) > 0) {
+                    if((toY - fromY) > 0) {
+                        checkX = fromX + 1;
+                        checkY = fromY + 1;
+                        while(checkX < toX && checkY < toY && board[checkX, checkY] == '.') {
+                            checkX++;
+                            checkY++;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    } else {
+                        checkX = fromX + 1;
+                        checkY = fromY - 1;
+                        while(checkX < toX && checkY > toY && board[checkX, checkY] == '.') {
+                            checkX++;
+                            checkY--;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if((toY - fromY) > 0) {
+                        checkX = fromX - 1;
+                        checkY = fromY + 1;
+                        while(checkX > toX && checkY < toY && board[checkX, checkY] == '.') {
+                            checkX--;
+                            checkY++;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    } else {
+                        checkX = fromX - 1;
+                        checkY = fromY - 1;
+                        while(checkX > toX && checkY > toY && board[checkX, checkY] == '.') {
+                            checkX--;
+                            checkY--;
+                        }
+                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                            return true;
+                        }
+                    }
+                }
+            } else if(fromX != toX) {
+                if((toX - fromX) > 0) {
+                    checkX = fromX + 1;
+                    while(checkX < toX && board[checkX, toY] == '.') {
+                        checkX++;
+                    }
+                    if(checkX == toX && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                } else {
+                    checkX = fromX - 1;
+                    while(checkX > toX && board[checkX, toY] == '.') {
+                        checkX--;
+                    }
+                    if(checkX == toX && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                }
+                return false;
+            } else if(fromY != toY) {
+                if((toY - fromY) > 0) {
+                    checkY = fromY + 1;
+                    while(checkY < toY && board[toX, checkY] == '.') {
+                        checkY++;
+                    }
+                    if(checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                } else {
+                    checkY = fromY - 1;
+                    while(checkY > toY && board[toX, checkY] == '.') {
+                        checkY--;
+                    }
+                    if(checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return false;
+        }
+
+        public bool wKing(int fromX, int fromY, int toX, int toY, char[,] board) {
+            if((toX == fromX + 1 || toX == fromX - 1) && (toY == fromY + 1 || toY == fromY - 1)) {
+                return true;
+            }else if() {
+
+            }
+            return false;
+        }
+
+        public bool bKing(int fromX, int fromY, int toX, int toY, char[,] board) {
+            return false;
         }
     }
 }
