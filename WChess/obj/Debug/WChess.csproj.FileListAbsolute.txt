@@ -17,3 +17,4 @@ C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.Form1.resources
 C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.Properties.Resources.resources
 C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.csproj.GenerateResource.Cache
 C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.RestartPrompt.resources
+D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.RestartPrompt.resources

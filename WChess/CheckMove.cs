@@ -473,7 +473,7 @@ namespace WChess
             if((toX == fromX + 1 || toX == fromX - 1) && (toY == fromY + 1 || toY == fromY - 1)) {
                 return true;
             }else if() {
-
+                return true;
             }
             return false;
         }
