@@ -183,33 +183,29 @@ namespace WChess
             }
             for (int i = 0; i < 8; i++)
             {
-                //board[i, 1] = 'p';
+                board[i, 1] = 'p';
             }
             for(int i = 0; i < 8; i++)
             {
-                //board[i, 6] = 'P';
+                board[i, 6] = 'P';
             }
-
-            //board[0, 0] = 'r';
-            //board[1, 0] = 'n';
-            //board[2, 0] = 'b';
-            //board[3, 0] = 'q';
+            board[0, 0] = 'r';
+            board[1, 0] = 'n';
+            board[2, 0] = 'b';
+            board[3, 0] = 'q';
             //board[4, 0] = 'k';
             //board[5, 0] = 'b';
             //board[6, 0] = 'n';
-            //board[7, 0] = 'r';
+            board[7, 0] = 'r';
 
-            //board[0, 7] = 'R';
-            //board[1, 7] = 'N';
-            //board[2, 7] = 'B';
-            //board[3, 7] = 'Q';
+            board[0, 7] = 'R';
+            board[1, 7] = 'N';
+            board[2, 7] = 'B';
+            board[3, 7] = 'Q';
             //board[4, 7] = 'K';
             //board[5, 7] = 'B';
             //board[6, 7] = 'N';
-            //board[7, 7] = 'R';
-            board[2, 3] = 'K';
-
-            board[5, 3] = 'k';
+            board[7, 7] = 'R';
 
         }
 
@@ -234,29 +230,17 @@ namespace WChess
             char piece = board[fromX, fromY];
             switch(piece) {
                 case 'K':
-                    if(checkMove.wKing(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+
+                    break;
                 case 'Q':
-                    if(checkMove.wQueen(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    
+                    break;
                 case 'B':
-                    if(checkMove.wBishop(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    
+                    break;
                 case 'N':
-                    if(checkMove.wKnight(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    
+                    break;
                 case 'R':
                     if(checkMove.wRook(fromX, fromY, toX, toY, board)) {
                         return true;
@@ -270,29 +254,17 @@ namespace WChess
                         return false;
                     }
                 case 'k':
-                    if(checkMove.bKing(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    
+                    break;
                 case 'q':
-                    if(checkMove.bQueen(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    
+                    break;
                 case 'b':
-                    if(checkMove.bBishop(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    
+                    break;
                 case 'n':
-                    if(checkMove.bKnight(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    
+                    break;
                 case 'r':
                     if(checkMove.bRook(fromX, fromY, toX, toY, board)) {
                         return true;

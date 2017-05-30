@@ -23,6 +23,5 @@ namespace WChess {
             restart = true;
             DialogResult = DialogResult.OK;
         }
-
     }
 }
