@@ -16,7 +16,7 @@ namespace WChess
         bool[,] highlight = new bool[8, 8];
         int highlightfirstx = 0;
         int highlightfirsty = 0;
-        char turn = 'W';
+        //char turn = 'W';
 
 
         SolidBrush[] brush = new SolidBrush[3];
@@ -68,7 +68,7 @@ namespace WChess
                 highlightfirstx = x;
                 highlightfirsty = y;
             }else if (highlightCount == 2){
-                if (legalMove(highlightfirstx, highlightfirsty, x, y)){
+                if (movePiece(highlightfirstx, highlightfirsty, x, y)){
                     char piece = board[highlightfirstx, highlightfirsty];
                     board[highlightfirstx, highlightfirsty] = '.';
                     board[x, y] = piece;
@@ -152,6 +152,17 @@ namespace WChess
                     }
                 }
             }
+            tbx_Debug.Text = "";
+            string row = "";
+            for(int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {
+                    row += board[j, i];
+                }
+                tbx_Debug.AppendText(row);
+                tbx_Debug.AppendText("\r\n");
+                row = "";
+            }
+
         }
 
         private void prepareArrays()
@@ -172,36 +183,39 @@ namespace WChess
             }
             for (int i = 0; i < 8; i++)
             {
-                board[i, 1] = 'p';
+                //board[i, 1] = 'p';
             }
             for(int i = 0; i < 8; i++)
             {
-                board[i, 6] = 'P';
+                //board[i, 6] = 'P';
             }
-            board[0, 0] = 'r';
-            board[1, 0] = 'n';
-            board[2, 0] = 'b';
-            board[3, 0] = 'q';
-            board[4, 0] = 'k';
-            board[5, 0] = 'b';
-            board[6, 0] = 'n';
-            board[7, 0] = 'r';
 
-            board[0, 7] = 'R';
-            board[1, 7] = 'N';
-            board[2, 7] = 'B';
-            board[3, 7] = 'Q';
-            board[4, 7] = 'K';
-            board[5, 7] = 'B';
-            board[6, 7] = 'N';
-            board[7, 7] = 'R';
+            //board[0, 0] = 'r';
+            //board[1, 0] = 'n';
+            //board[2, 0] = 'b';
+            //board[3, 0] = 'q';
+            //board[4, 0] = 'k';
+            //board[5, 0] = 'b';
+            //board[6, 0] = 'n';
+            //board[7, 0] = 'r';
+
+            //board[0, 7] = 'R';
+            //board[1, 7] = 'N';
+            //board[2, 7] = 'B';
+            //board[3, 7] = 'Q';
+            //board[4, 7] = 'K';
+            //board[5, 7] = 'B';
+            //board[6, 7] = 'N';
+            //board[7, 7] = 'R';
+            board[2, 3] = 'K';
+
+            board[5, 3] = 'k';
 
         }
 
         private void loadImages()
         {
             Image KingW = Image.FromFile("KingW.png");
-            Image KingB = Image.FromFile("KingB.png");
             Image QueenW = Image.FromFile("QueenW.png");
             Image QueenB = Image.FromFile("QueenB.png");
             Image BishopW = Image.FromFile("BishopW.png");
@@ -214,58 +228,85 @@ namespace WChess
             Image PawnB = Image.FromFile("PawnB.png");
         }
 
-        private bool legalMove(int fromX, int fromY, int toX, int toY)
+        private bool movePiece(int fromX, int fromY, int toX, int toY)
         {
-            char pieceStart = board[fromX, fromY];
-            char pieceEnd = board[toX, toY];
-            int checkX, checkY;
-
-            
-            if(pieceStart == 'p') {
-                if(toY == fromY + 1) {
-                    if(toX == fromX && board[toX, toY] == '.') {
-                        return true;
-                    } else if(board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
+            CheckMove checkMove = new CheckMove();
+            char piece = board[fromX, fromY];
+            switch(piece) {
+                case 'K':
+                    if(checkMove.wKing(fromX, fromY, toX, toY, board)) {
                         return true;
                     } else {
                         return false;
                     }
-                } else if(toY == 3) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if(pieceStart == 'P') {
-                if(toY == fromY - 1 && toX == fromX && board[toX, toY] == '.') {
-                    return true;
-                } else if(board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
-                    return true;
-                } else if(toY == 4) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if(pieceStart == 'r' || pieceStart == 'R') {
-                if(fromX != toX && fromY != toY) {
-                    return false;
-                } else if(fromX != toX || fromY != toY) {
-                    if(checkPath(fromX, fromY, toX, toY))
-                    {
-
+                case 'Q':
+                    if(checkMove.wQueen(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
                     }
-                } else {
-                    return false;
-                }
-            } else if(pieceStart == 'b' || pieceStart == 'B') {
-                if(fromX != toX && fromY != toY) {
-                    return true;
-
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
+                case 'B':
+                    if(checkMove.wBishop(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'N':
+                    if(checkMove.wKnight(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'R':
+                    if(checkMove.wRook(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'P':
+                    if(checkMove.wPawn(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'k':
+                    if(checkMove.bKing(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'q':
+                    if(checkMove.bQueen(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'b':
+                    if(checkMove.bBishop(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'n':
+                    if(checkMove.bKnight(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'r':
+                    if(checkMove.bRook(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'p':
+                    if(checkMove.bPawn(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
             }
+            return false;
         } 
 
         private void loadBrushes()
@@ -273,11 +314,6 @@ namespace WChess
             brush[0] = new SolidBrush(Color.AntiqueWhite);
             brush[1] = new SolidBrush(Color.Chocolate);
             brush[2] = new SolidBrush(Color.AliceBlue);
-        }
-
-        private bool checkPath(int fromX, int fromY, int toX, int toY)
-        {
-            
         }
 
         private void btn_Restart_Click(object sender, EventArgs e) {
