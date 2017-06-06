@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WChess {
     class CheckMove {
@@ -11,7 +12,7 @@ namespace WChess {
 
         public bool movePiece(int fromX, int fromY, int toX, int toY, char[,] board) {
             char piece = board[fromX, fromY];
-            switch(piece) {
+            switch(piece) { // kolla vilken pjäs det är som vill röra sig och om det är ett legalt move
                 case 'K':
                     if(wKing(fromX, fromY, toX, toY, board)) {
                         return true;
@@ -94,7 +95,7 @@ namespace WChess {
             generateBitBoard(board);
             for(int i = 0; noKing && i < 8; i++) {
                 for(int j = 0; noKing && j < 8; j++) {
-                    if(board[j, i] == 'K') {
+                    if(board[j, i] == 'K') { // Hitta vitt kungs x och y
                         yW = i;
                         xW = j;
                         noKing = false;
@@ -104,7 +105,7 @@ namespace WChess {
             noKing = true;
             for(int i = 0; noKing && i < 8; i++) {
                 for(int j = 0; noKing && j < 8; j++) {
-                    if(board[j, i] == 'k') {
+                    if(board[j, i] == 'k') { // Hitta svart kungs x och y
                         yB = i;
                         xB = j;
                         noKing = false;
@@ -112,7 +113,7 @@ namespace WChess {
                 }
             }
 
-            if(bitboard[xW, yW] != 0) {
+            if(bitboard[xW, yW] != 0) { // Returnar vilken kung som är i schack om ingen är i schack returnar den .
                 return 'K';
             } else if(bitboard[xB, yB] != 0) {
                 return 'k';
@@ -121,7 +122,18 @@ namespace WChess {
             }
         }
 
-        public void generateBitBoard(char[,] board) {
+        public void promotion(int fromX, int fromY, int toY, char[,] board) {
+            if((toY == 0 || toY == 7) && char.ToLower(board[fromX, fromY]) == 'p') { // kolla om det är en bonde som kommit fram till sista raden
+                using(var ChoosePiece = new ChoosePiece()) { // Fråga vilken pjäs de vill ha
+                    if(ChoosePiece.ShowDialog() == DialogResult.OK) {
+                        char SwitchTo = ChoosePiece.toPiece;
+                        board[fromX, fromY] = SwitchTo;
+                    }
+                }
+            }
+        }
+
+        public void generateBitBoard(char[,] board) { // Gör en bräda som visar hur många pjäser som kan flytta sig till en specifik plats
             for(int i = 0; i < 8; i++) {
                 for(int j = 0; j < 8; j++) {
                     bitboard[j, i] = 0;
@@ -143,7 +155,9 @@ namespace WChess {
             }
 
         }
-
+        /*
+        Allt efter här kollar på pjäsernas olika rörelser och svarar med true/false beroende om den pjäsen får röra sig så
+        */
         private bool bPawn(int fromX, int fromY, int toX, int toY, char[,] board) {
             if(toY == fromY + 1) {
                 if(toX == fromX && board[toX, toY] == '.') {

@@ -28,9 +28,9 @@ namespace WChess {
             InitializeComponent();
         }
 
-        private void pnl_ShowPieces_Paint(object sender, PaintEventArgs e) {
+        private void pnl_ShowPieces_Paint(object sender, PaintEventArgs e) { // Rita ut allternativen
             Graphics g = e.Graphics;
-            if(!f.Whiteturn) {
+            if(f.Whiteturn) {
                 g.DrawImage(QueenW, 0, 0, 80, 80);
                 g.DrawImage(BishopW, 80, 0, 80, 80);
                 g.DrawImage(KnightW, 160, 0, 80, 80);
@@ -43,9 +43,9 @@ namespace WChess {
             }
         }
 
-        private void pnl_ShowPieces_MouseClick(object sender, MouseEventArgs e) {
+        private void pnl_ShowPieces_MouseClick(object sender, MouseEventArgs e) { // Kolla vad den har valt och returnera det
             int x = e.X / 80;
-            if(!f.Whiteturn) {
+            if(f.Whiteturn) {
                 if(x == 0) {
                     toPiece = 'Q';
                 } else if(x == 1) {
@@ -66,7 +66,7 @@ namespace WChess {
                     toPiece = 'r';
                 }
             }
-            DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK; // Avsluta
         }
 
     }
