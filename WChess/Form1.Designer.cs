@@ -28,20 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnl_Board = new System.Windows.Forms.Panel();
             this.btn_Restart = new System.Windows.Forms.Button();
             this.tbx_Debug = new System.Windows.Forms.TextBox();
             this.lbl_TurnNotif = new System.Windows.Forms.Label();
+            this.pnl_Taken = new System.Windows.Forms.Panel();
+            this.lbl_Legality = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // panel1
+            // pnl_Board
             // 
-            this.panel1.Location = new System.Drawing.Point(13, 13);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(400, 400);
-            this.panel1.TabIndex = 0;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            this.panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseClick);
+            this.pnl_Board.Location = new System.Drawing.Point(13, 13);
+            this.pnl_Board.Name = "pnl_Board";
+            this.pnl_Board.Size = new System.Drawing.Size(400, 400);
+            this.pnl_Board.TabIndex = 0;
+            this.pnl_Board.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_Board_Paint);
+            this.pnl_Board.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pnl_Board_MouseClick);
             // 
             // btn_Restart
             // 
@@ -66,19 +68,36 @@
             this.lbl_TurnNotif.AutoSize = true;
             this.lbl_TurnNotif.Location = new System.Drawing.Point(442, 13);
             this.lbl_TurnNotif.Name = "lbl_TurnNotif";
-            this.lbl_TurnNotif.Size = new System.Drawing.Size(60, 13);
+            this.lbl_TurnNotif.Size = new System.Drawing.Size(0, 13);
             this.lbl_TurnNotif.TabIndex = 3;
-            this.lbl_TurnNotif.Text = "White Turn";
+            // 
+            // pnl_Taken
+            // 
+            this.pnl_Taken.Location = new System.Drawing.Point(419, 266);
+            this.pnl_Taken.Name = "pnl_Taken";
+            this.pnl_Taken.Size = new System.Drawing.Size(186, 89);
+            this.pnl_Taken.TabIndex = 4;
+            this.pnl_Taken.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_Taken_Paint);
+            // 
+            // lbl_Legality
+            // 
+            this.lbl_Legality.AutoSize = true;
+            this.lbl_Legality.Location = new System.Drawing.Point(442, 35);
+            this.lbl_Legality.Name = "lbl_Legality";
+            this.lbl_Legality.Size = new System.Drawing.Size(0, 13);
+            this.lbl_Legality.TabIndex = 5;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(617, 462);
+            this.Controls.Add(this.lbl_Legality);
+            this.Controls.Add(this.pnl_Taken);
             this.Controls.Add(this.lbl_TurnNotif);
             this.Controls.Add(this.tbx_Debug);
             this.Controls.Add(this.btn_Restart);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnl_Board);
             this.Name = "Form1";
             this.Text = "WChess";
             this.ResumeLayout(false);
@@ -88,10 +107,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnl_Board;
         private System.Windows.Forms.Button btn_Restart;
         private System.Windows.Forms.TextBox tbx_Debug;
         private System.Windows.Forms.Label lbl_TurnNotif;
+        private System.Windows.Forms.Panel pnl_Taken;
+        private System.Windows.Forms.Label lbl_Legality;
     }
 }
 

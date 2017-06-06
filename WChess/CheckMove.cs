@@ -6,21 +6,150 @@ using System.Threading.Tasks;
 
 namespace WChess {
     class CheckMove {
-        Form1 f = new WChess.Form1();
-        public CheckMove() {
-            
-        }
 
-        public bool bPawn(int fromX, int fromY, int toX, int toY, char[,] board) {
-            if(toY == fromY + 1) {
-                if(toX == fromX && board[toX, toY] == '.') {
-                    return true;
-                } else if(board[toX, toY] != '.') {
-                    if(toX == fromX - 1 || toX == fromX + 1) {
+        public int[,] bitboard = new int[8, 8];
+
+        public bool movePiece(int fromX, int fromY, int toX, int toY, char[,] board) {
+            char piece = board[fromX, fromY];
+            switch(piece) {
+                case 'K':
+                    if(wKing(fromX, fromY, toX, toY, board)) {
                         return true;
                     } else {
                         return false;
                     }
+                case 'Q':
+                    if(wQueen(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'B':
+                    if(wBishop(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'N':
+                    if(wKnight(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'R':
+                    if(wRook(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'P':
+                    if(wPawn(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'k':
+                    if(bKing(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'q':
+                    if(bQueen(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'b':
+                    if(bBishop(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'n':
+                    if(bKnight(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'r':
+                    if(bRook(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case 'p':
+                    if(bPawn(fromX, fromY, toX, toY, board)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+            }
+            return false;
+        }
+
+        public char checkMate(char[,] board) {
+            bool noKing = true;
+            int xW = 0, yW = 0, xB = 0, yB = 0;
+            generateBitBoard(board);
+            for(int i = 0; noKing && i < 8; i++) {
+                for(int j = 0; noKing && j < 8; j++) {
+                    if(board[j, i] == 'K') {
+                        yW = i;
+                        xW = j;
+                        noKing = false;
+                    }
+                }
+            }
+            noKing = true;
+            for(int i = 0; noKing && i < 8; i++) {
+                for(int j = 0; noKing && j < 8; j++) {
+                    if(board[j, i] == 'k') {
+                        yB = i;
+                        xB = j;
+                        noKing = false;
+                    }
+                }
+            }
+
+            if(bitboard[xW, yW] != 0) {
+                return 'K';
+            } else if(bitboard[xB, yB] != 0) {
+                return 'k';
+            } else {
+                return '.';
+            }
+        }
+
+        public void generateBitBoard(char[,] board) {
+            for(int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {
+                    bitboard[j, i] = 0;
+                }
+            }
+
+            for(int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {
+                    if(board[i, j] != '.') {
+                        for(int x = 0; x < 8; x++) {
+                            for(int y = 0; y < 8; y++) {
+                                if(movePiece(i, j, x, y, board)) {
+                                    bitboard[x, y]++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        private bool bPawn(int fromX, int fromY, int toX, int toY, char[,] board) {
+            if(toY == fromY + 1) {
+                if(toX == fromX && board[toX, toY] == '.') {
+                    return true;
+                } else if(board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1) && char.IsUpper(board[toX, toY])) {
+                    return true;
                 } else {
                     return false;
                 }
@@ -29,13 +158,14 @@ namespace WChess {
             } else {
                 return false;
             }
+        
         }
 
-        public bool wPawn(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool wPawn(int fromX, int fromY, int toX, int toY, char[,] board) {
             if(toY == fromY - 1) {
                 if(toX == fromX && board[toX, toY] == '.') {
                     return true;
-                } else if(board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1)) {
+                } else if(board[toX, toY] != '.' && (toX == fromX - 1 || toX == fromX + 1) && char.IsLower(board[toX, toY])) {
                     return true;
                 } else {
                     return false;
@@ -47,7 +177,7 @@ namespace WChess {
             }
         }
 
-        public bool bRook(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool bRook(int fromX, int fromY, int toX, int toY, char[,] board) {
             int checkX, checkY;
             if(fromX != toX && fromY != toY) {
                 return false;
@@ -94,7 +224,7 @@ namespace WChess {
             }
         }
 
-        public bool wRook(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool wRook(int fromX, int fromY, int toX, int toY, char[,] board) {
             int checkX, checkY;
             if(fromX != toX && fromY != toY) {
                 return false;
@@ -141,7 +271,7 @@ namespace WChess {
             }
         }
 
-        public bool wKnight(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool wKnight(int fromX, int fromY, int toX, int toY, char[,] board) {
             if((toX == fromX + 2 && (toY == fromY + 1 || toY == fromY - 1)) || (toX == fromX - 2 && (toY == fromY + 1 || toY == fromY - 1))) {
                 if(board[toX, toY] == '.' || char.IsLower(board[toX, toY])) {
                     return true;
@@ -159,7 +289,7 @@ namespace WChess {
             }
         }
 
-        public bool bKnight(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool bKnight(int fromX, int fromY, int toX, int toY, char[,] board) {
             if((toX == fromX + 2 && (toY == fromY + 1 || toY == fromY - 1)) || (toX == fromX - 2 && (toY == fromY + 1 || toY == fromY - 1))) {
                 if(board[toX, toY] == '.' || char.IsUpper(board[toX, toY])) {
                     return true;
@@ -177,7 +307,7 @@ namespace WChess {
             }
         }
 
-        public bool wBishop(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool wBishop(int fromX, int fromY, int toX, int toY, char[,] board) {
             if(fromX != toX && fromY != toY) {
                 int checkX, checkY;
                 if((toX - fromX) > 0) {
@@ -231,7 +361,7 @@ namespace WChess {
             }
         }
 
-        public bool bBishop(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool bBishop(int fromX, int fromY, int toX, int toY, char[,] board) {
             if(fromX != toX && fromY != toY) {
                 int checkX, checkY;
                 if((toX - fromX) > 0) {
@@ -285,7 +415,7 @@ namespace WChess {
             }
         }
 
-        public bool wQueen(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool wQueen(int fromX, int fromY, int toX, int toY, char[,] board) {
             int checkX, checkY;
             if(fromX != toX && fromY != toY) {
                 if((toX - fromX) > 0) {
@@ -296,7 +426,7 @@ namespace WChess {
                             checkX++;
                             checkY++;
                         }
-                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                        if(checkX == toX && checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
                             return true;
                         }
                     } else {
@@ -306,7 +436,7 @@ namespace WChess {
                             checkX++;
                             checkY--;
                         }
-                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                        if(checkX == toX && checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
                             return true;
                         }
                     }
@@ -318,7 +448,7 @@ namespace WChess {
                             checkX--;
                             checkY++;
                         }
-                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                        if(checkX == toX && checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
                             return true;
                         }
                     } else {
@@ -328,7 +458,7 @@ namespace WChess {
                             checkX--;
                             checkY--;
                         }
-                        if(checkX == toX && checkY == toY && (char.IsUpper(board[toX, toY]) || board[toX, toY] == '.')) {
+                        if(checkX == toX && checkY == toY && (char.IsLower(board[toX, toY]) || board[toX, toY] == '.')) {
                             return true;
                         }
                     }
@@ -375,7 +505,7 @@ namespace WChess {
             return false;
         }
 
-        public bool bQueen(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool bQueen(int fromX, int fromY, int toX, int toY, char[,] board) {
             int checkX, checkY;
             if(fromX != toX && fromY != toY) {
                 if((toX - fromX) > 0) {
@@ -465,7 +595,7 @@ namespace WChess {
             return false;
         }
 
-        public bool wKing(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool wKing(int fromX, int fromY, int toX, int toY, char[,] board) {
             if((toX == fromX + 1 || toX == fromX - 1) && (toY == fromY + 1 || toY == fromY - 1)) {
                 if(char.IsLower(board[toX, toY]) || board[toX, toY] == '.') {
                     return true;
@@ -478,7 +608,7 @@ namespace WChess {
             return false;
         }
 
-        public bool bKing(int fromX, int fromY, int toX, int toY, char[,] board) {
+        private bool bKing(int fromX, int fromY, int toX, int toY, char[,] board) {
             if((toX == fromX + 1 || toX == fromX - 1) && (toY == fromY + 1 || toY == fromY - 1)) {
                 if(char.IsUpper(board[toX, toY]) || board[toX, toY] == '.') {
                     return true;
@@ -490,5 +620,6 @@ namespace WChess {
             }
             return false;
         }
+
     }
 }

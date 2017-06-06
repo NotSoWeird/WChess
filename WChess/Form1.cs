@@ -11,12 +11,15 @@ using System.Windows.Forms;
 namespace WChess {
     public partial class Form1 : Form {
         char[,] board = new char[8, 8];
+        char[,] oldboard = new char[8, 8];
         bool[,] highlight = new bool[8, 8];
+        List<char> takenW = new List<char>();
+        List<char> takenB = new List<char>();
         int highlightfirstx = 0;
         int highlightfirsty = 0;
-        public bool Whiteturn = true;
+        public bool Whiteturn;
 
-
+        CheckMove checkMove = new CheckMove();
         SolidBrush[] brush = new SolidBrush[3];
         Image KingW = Image.FromFile("KingW.png");
         Image KingB = Image.FromFile("KingB.png");
@@ -37,10 +40,10 @@ namespace WChess {
             InitializeComponent();
             prepareArrays();
             loadBrushes();
-            panel1.Invalidate();
+            pnl_Board.Invalidate();
         }
 
-        private void panel1_MouseClick(object sender, MouseEventArgs e) {
+        private void pnl_Board_MouseClick(object sender, MouseEventArgs e) {
             int x = e.X / 50;
             int y = e.Y / 50;
             int highlightCount = 0;
@@ -57,29 +60,54 @@ namespace WChess {
                 }
             }
 
+            lbl_Legality.Text = "";
+
             if(highlightCount == 1 ) {
                 highlightfirstx = x;
                 highlightfirsty = y;
             } else if(highlightCount == 2) {
-                if (movePiece(highlightfirstx, highlightfirsty, x, y) && ((char.IsUpper(board[highlightfirstx, highlightfirsty]) && Whiteturn) || (char.IsLower(board[highlightfirstx, highlightfirsty]) && !Whiteturn))){
+                if (checkMove.movePiece(highlightfirstx, highlightfirsty, x, y, board) && ((char.IsUpper(board[highlightfirstx, highlightfirsty]) && Whiteturn) || (char.IsLower(board[highlightfirstx, highlightfirsty]) && !Whiteturn))){
+                    for(int i = 0; i < 8; i++) {
+                        for(int j = 0; j < 8; j++) {
+                            oldboard[i, j] = board[i, j];
+                        }
+                    }
                     promotion(highlightfirstx, highlightfirsty, y);
+                    if(board[x, y] != '.') {
+                        if(char.IsUpper(board[x, y])) {
+                            takenW.Add(board[x, y]);
+                        } else {
+                            takenB.Add(board[x, y]);
+                        }
+                    }
                     char piece = board[highlightfirstx, highlightfirsty];
                     board[highlightfirstx, highlightfirsty] = '.';
                     board[x, y] = piece;
                     Whiteturn = !Whiteturn;
+                    if((!Whiteturn && checkMove.checkMate(board) == 'K') || (Whiteturn && checkMove.checkMate(board) == 'k')) {
+                        Whiteturn = !Whiteturn;
+                        for(int i = 0; i < 8; i++) {
+                            for(int j = 0; j < 8; j++) {
+                                board[i, j] = oldboard[i, j];
+                            }
+                        }
+                        lbl_Legality.Text = "In Check";
+                    }
                     if(Whiteturn) {
                         lbl_TurnNotif.Text = "White Turn";
                     } else {
                         lbl_TurnNotif.Text = "Black Turn";
                     }
+                } else {
+                    lbl_Legality.Text = "Illegal move";
                 }
                 highlight[x, y] = false;
                 highlight[highlightfirstx, highlightfirsty] = false;
             }
-            panel1.Invalidate();
+            pnl_Board.Invalidate();
         }
         
-        private void panel1_Paint(object sender, PaintEventArgs e) {
+        private void pnl_Board_Paint(object sender, PaintEventArgs e) {
             Graphics g = e.Graphics;
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
@@ -146,17 +174,81 @@ namespace WChess {
                     }
                 }
             }
+
+            pnl_Taken.Invalidate();
+            checkMove.generateBitBoard(board);
+
             tbx_Debug.Text = "";
             string row = "";
             for(int i = 0; i < 8; i++) {
                 for(int j = 0; j < 8; j++) {
-                    row += board[j, i];
+                   //row += board[j, i];
+                }
+                for(int j = 0; j < 8; j++) {
+                    row += checkMove.bitboard[j, i];
+                    row += " ";
                 }
                 tbx_Debug.AppendText(row);
                 tbx_Debug.AppendText("\r\n");
                 row = "";
             }
+            if(checkMove.checkMate(board) == 'K') {
+                tbx_Debug.AppendText("White in check");
+            } else if(checkMove.checkMate(board) == 'k') {
+                tbx_Debug.AppendText("Black in check");
+            } else {
+                tbx_Debug.AppendText("No Check");
+            }
+            
+        }
 
+        private void pnl_Taken_Paint(object sender, PaintEventArgs e) {
+            Graphics g = e.Graphics;
+            for(int i = 0; i < takenW.Count; i++) {
+                switch(takenW[i]) {
+                    case 'K':
+                        g.DrawImage(KingW, i * 15, 3, 40, 40);
+                        break;
+                    case 'Q':
+                        g.DrawImage(QueenW, i * 15, 3, 40, 40);
+                        break;
+                    case 'B':
+                        g.DrawImage(BishopW, i * 15, 3, 40, 40);
+                        break;
+                    case 'N':
+                        g.DrawImage(KnightW, i * 15, 3, 40, 40);
+                        break;
+                    case 'R':
+                        g.DrawImage(RookW, i * 15, 3, 40, 40);
+                        break;
+                    case 'P':
+                        g.DrawImage(PawnW, i * 15, 3, 40, 40);
+                        break;
+                }
+            }
+
+            for(int i = 0; i < takenB.Count; i++) {
+                switch(takenB[i]) {
+                    case 'k':
+                        g.DrawImage(KingB, i * 15, 50, 40, 40);
+                        break;
+                    case 'q':
+                        g.DrawImage(QueenB, i * 15, 50, 40, 40);
+                        break;
+                    case 'b':
+                        g.DrawImage(BishopB, i * 15, 50, 40, 40);
+                        break;
+                    case 'n':
+                        g.DrawImage(KnightB, i * 15, 50, 40, 40);
+                        break;
+                    case 'r':
+                        g.DrawImage(RookB, i * 15, 50, 40, 40);
+                        break;
+                    case 'p':
+                        g.DrawImage(PawnB, i * 15, 50, 40, 40);
+                        break;
+                }
+            }
         }
 
         private void prepareArrays() {
@@ -176,8 +268,7 @@ namespace WChess {
             for(int i = 0; i < 8; i++) {
                 board[i, 6] = 'P';
             }
-            board[2, 6] = 'p';
-            /*
+
             board[0, 0] = 'r';
             board[1, 0] = 'n';
             board[2, 0] = 'b';
@@ -195,89 +286,10 @@ namespace WChess {
             board[5, 7] = 'B';
             board[6, 7] = 'N';
             board[7, 7] = 'R'; 
-            */
+            
             Whiteturn = true;
             lbl_TurnNotif.Text = "White Turn";
-        }
-
-        private bool movePiece(int fromX, int fromY, int toX, int toY) {
-            CheckMove checkMove = new CheckMove();
-            char piece = board[fromX, fromY];
-            switch(piece) {
-                case 'K':
-                    if(checkMove.wKing(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'Q':
-                    if(checkMove.wQueen(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'B':
-                    if(checkMove.wBishop(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'N':
-                    if(checkMove.wKnight(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'R':
-                    if(checkMove.wRook(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'P':
-                    if(checkMove.wPawn(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'k':
-                    if(checkMove.bKing(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'q':
-                    if(checkMove.bQueen(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'b':
-                    if(checkMove.bBishop(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'n':
-                    if(checkMove.bKnight(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'r':
-                    if(checkMove.bRook(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case 'p':
-                    if(checkMove.bPawn(fromX, fromY, toX, toY, board)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-            }
-            return false;
+            checkMove.generateBitBoard(board);
         }
         
         private void promotion(int fromX, int fromY, int toY) {
@@ -289,7 +301,8 @@ namespace WChess {
                     }
                 }
             }
-        } 
+        }
+        
 
         private void loadBrushes() {
             brush[0] = new SolidBrush(Color.AntiqueWhite);
@@ -301,7 +314,7 @@ namespace WChess {
             using(var RestartPrompt = new RestartPrompt()) {
                 if(RestartPrompt.ShowDialog() == DialogResult.Yes) {
                     prepareArrays();
-                    panel1.Invalidate();
+                    pnl_Board.Invalidate();
                 }
             }
             //'\u0001'
