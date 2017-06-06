@@ -10,18 +10,16 @@ using System.Windows.Forms;
 
 namespace WChess {
     public partial class RestartPrompt : Form {
-        public bool restart = false;
         public RestartPrompt() {
             InitializeComponent();
         }
 
         private void btn_No_Click(object sender, EventArgs e) {
-            DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.No;
         }
 
         private void btn_Yes_Click(object sender, EventArgs e) {
-            restart = true;
-            DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.Yes;
         }
 
     }

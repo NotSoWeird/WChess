@@ -28,7 +28,7 @@ namespace WChess
                 } else {
                     return false;
                 }
-            } else if(toY == 3 && board[toX, toY] == '.' && board[toX, 2] == '.') {
+            } else if(toY == 3 && toX == fromX && board[toX, toY] == '.' && board[toX, 2] == '.') {
                 return true;
             } else {
                 return false;
@@ -44,7 +44,7 @@ namespace WChess
                 } else {
                     return false;
                 }
-            } else if(toY == 4 && board[toX, toY] == '.' && board[toX, 5] == '.') {
+            } else if(toY == 4 && toX == fromX && board[toX, toY] == '.' && board[toX, 5] == '.') {
                 return true;
             } else {
                 return false;
@@ -471,14 +471,27 @@ namespace WChess
 
         public bool wKing(int fromX, int fromY, int toX, int toY, char[,] board) {
             if((toX == fromX + 1 || toX == fromX - 1) && (toY == fromY + 1 || toY == fromY - 1)) {
-                return true;
-            }else if() {
-                return true;
+                if(char.IsLower(board[toX, toY]) || board[toX, toY] == '.') {
+                    return true;
+                }
+            } else if(((toX == fromX + 1 || toX == fromX -1) && toY == fromY) || ((toY == fromY + 1 || toY == fromY - 1) && toX == fromX)) {
+                if(char.IsLower(board[toX, toY]) || board[toX, toY] == '.') {
+                    return true;
+                }
             }
             return false;
         }
 
         public bool bKing(int fromX, int fromY, int toX, int toY, char[,] board) {
+            if((toX == fromX + 1 || toX == fromX - 1) && (toY == fromY + 1 || toY == fromY - 1)) {
+                if(char.IsUpper(board[toX, toY]) || board[toX, toY] == '.') {
+                    return true;
+                }
+            } else if(((toX == fromX + 1 || toX == fromX - 1) && toY == fromY) || ((toY == fromY + 1 || toY == fromY - 1) && toX == fromX)) {
+                if(char.IsUpper(board[toX, toY]) || board[toX, toY] == '.') {
+                    return true;
+                }
+            }
             return false;
         }
     }

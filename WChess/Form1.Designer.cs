@@ -31,6 +31,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btn_Restart = new System.Windows.Forms.Button();
             this.tbx_Debug = new System.Windows.Forms.TextBox();
+            this.lbl_TurnNotif = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // panel1
@@ -60,11 +61,21 @@
             this.tbx_Debug.Size = new System.Drawing.Size(186, 205);
             this.tbx_Debug.TabIndex = 2;
             // 
+            // lbl_TurnNotif
+            // 
+            this.lbl_TurnNotif.AutoSize = true;
+            this.lbl_TurnNotif.Location = new System.Drawing.Point(442, 13);
+            this.lbl_TurnNotif.Name = "lbl_TurnNotif";
+            this.lbl_TurnNotif.Size = new System.Drawing.Size(60, 13);
+            this.lbl_TurnNotif.TabIndex = 3;
+            this.lbl_TurnNotif.Text = "White Turn";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(617, 462);
+            this.Controls.Add(this.lbl_TurnNotif);
             this.Controls.Add(this.tbx_Debug);
             this.Controls.Add(this.btn_Restart);
             this.Controls.Add(this.panel1);
@@ -80,6 +91,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btn_Restart;
         private System.Windows.Forms.TextBox tbx_Debug;
+        private System.Windows.Forms.Label lbl_TurnNotif;
     }
 }
 

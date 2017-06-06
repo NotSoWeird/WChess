@@ -16,7 +16,7 @@ namespace WChess
         bool[,] highlight = new bool[8, 8];
         int highlightfirstx = 0;
         int highlightfirsty = 0;
-        //char turn = 'W';
+        bool Whiteturn = true;
 
 
         SolidBrush[] brush = new SolidBrush[3];
@@ -68,10 +68,16 @@ namespace WChess
                 highlightfirstx = x;
                 highlightfirsty = y;
             }else if (highlightCount == 2){
-                if (movePiece(highlightfirstx, highlightfirsty, x, y)){
+                if (movePiece(highlightfirstx, highlightfirsty, x, y) && ((char.IsUpper(board[highlightfirstx, highlightfirsty]) && Whiteturn) || (char.IsLower(board[highlightfirstx, highlightfirsty]) && !Whiteturn))){
                     char piece = board[highlightfirstx, highlightfirsty];
                     board[highlightfirstx, highlightfirsty] = '.';
                     board[x, y] = piece;
+                    Whiteturn = !Whiteturn;
+                    if(Whiteturn) {
+                        lbl_TurnNotif.Text = "White Turn";
+                    } else {
+                        lbl_TurnNotif.Text = "Black Turn";
+                    }
                 }
                 highlight[x, y] = false;
                 highlight[highlightfirstx, highlightfirsty] = false;
@@ -183,33 +189,31 @@ namespace WChess
             }
             for (int i = 0; i < 8; i++)
             {
-                //board[i, 1] = 'p';
+                board[i, 1] = 'p';
             }
             for(int i = 0; i < 8; i++)
             {
-                //board[i, 6] = 'P';
+                board[i, 6] = 'P';
             }
 
-            //board[0, 0] = 'r';
-            //board[1, 0] = 'n';
-            //board[2, 0] = 'b';
-            //board[3, 0] = 'q';
-            //board[4, 0] = 'k';
-            //board[5, 0] = 'b';
-            //board[6, 0] = 'n';
-            //board[7, 0] = 'r';
+            board[0, 0] = 'r';
+            board[1, 0] = 'n';
+            board[2, 0] = 'b';
+            board[3, 0] = 'q';
+            board[4, 0] = 'k';
+            board[5, 0] = 'b';
+            board[6, 0] = 'n';
+            board[7, 0] = 'r';
 
-            //board[0, 7] = 'R';
-            //board[1, 7] = 'N';
-            //board[2, 7] = 'B';
-            //board[3, 7] = 'Q';
-            //board[4, 7] = 'K';
-            //board[5, 7] = 'B';
-            //board[6, 7] = 'N';
-            //board[7, 7] = 'R';
-            board[2, 3] = 'K';
+            board[0, 7] = 'R';
+            board[1, 7] = 'N';
+            board[2, 7] = 'B';
+            board[3, 7] = 'Q';
+            board[4, 7] = 'K';
+            board[5, 7] = 'B';
+            board[6, 7] = 'N';
+            board[7, 7] = 'R';
 
-            board[5, 3] = 'k';
 
         }
 
@@ -318,11 +322,9 @@ namespace WChess
 
         private void btn_Restart_Click(object sender, EventArgs e) {
             RestartPrompt prompt = new RestartPrompt();
-            if(prompt.ShowDialog() == DialogResult.OK) {
-                if(prompt.restart) {
-                    prepareArrays();
-                    panel1.Invalidate();
-                }
+            if(prompt.ShowDialog() == DialogResult.Yes) {
+                prepareArrays();
+                panel1.Invalidate();
             }
             //'\u0001'
 

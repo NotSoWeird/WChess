@@ -30,7 +30,7 @@
             // 
             // btn_No
             // 
-            this.btn_No.Location = new System.Drawing.Point(15, 36);
+            this.btn_No.Location = new System.Drawing.Point(99, 31);
             this.btn_No.Name = "btn_No";
             this.btn_No.Size = new System.Drawing.Size(75, 23);
             this.btn_No.TabIndex = 0;
@@ -40,7 +40,7 @@
             // 
             // btn_Yes
             // 
-            this.btn_Yes.Location = new System.Drawing.Point(96, 36);
+            this.btn_Yes.Location = new System.Drawing.Point(12, 31);
             this.btn_Yes.Name = "btn_Yes";
             this.btn_Yes.Size = new System.Drawing.Size(75, 23);
             this.btn_Yes.TabIndex = 1;
