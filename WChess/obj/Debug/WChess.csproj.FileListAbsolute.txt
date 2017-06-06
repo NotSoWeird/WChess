@@ -18,3 +18,4 @@ C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.Properties.Resou
 C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.csproj.GenerateResource.Cache
 C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.RestartPrompt.resources
 D:\Skola\Årskurs 2\Programmering 1\C#\WChess\WChess\obj\Debug\WChess.RestartPrompt.resources
+C:\Users\NotSoWeird\Source\Repos\WChess\WChess\obj\Debug\WChess.ChoosePiece.resources

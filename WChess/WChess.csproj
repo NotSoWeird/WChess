@@ -62,6 +62,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckMove.cs" />
+    <Compile Include="ChoosePiece.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChoosePiece.Designer.cs">
+      <DependentUpon>ChoosePiece.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +82,9 @@
     <Compile Include="RestartPrompt.Designer.cs">
       <DependentUpon>RestartPrompt.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ChoosePiece.resx">
+      <DependentUpon>ChoosePiece.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

@@ -4,10 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WChess
-{
-    class CheckMove
-    {
+namespace WChess {
+    class CheckMove {
         Form1 f = new WChess.Form1();
         public CheckMove() {
             

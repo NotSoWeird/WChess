@@ -8,15 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WChess
-{
-    public partial class Form1 : Form
-    {
+namespace WChess {
+    public partial class Form1 : Form {
         char[,] board = new char[8, 8];
         bool[,] highlight = new bool[8, 8];
         int highlightfirstx = 0;
         int highlightfirsty = 0;
-        bool Whiteturn = true;
+        public bool Whiteturn = true;
 
 
         SolidBrush[] brush = new SolidBrush[3];
@@ -35,17 +33,14 @@ namespace WChess
 
 
 
-        public Form1()
-        {
+        public Form1() {
             InitializeComponent();
             prepareArrays();
             loadBrushes();
-            loadImages();
             panel1.Invalidate();
         }
 
-        private void panel1_MouseClick(object sender, MouseEventArgs e)
-        {
+        private void panel1_MouseClick(object sender, MouseEventArgs e) {
             int x = e.X / 50;
             int y = e.Y / 50;
             int highlightCount = 0;
@@ -67,6 +62,7 @@ namespace WChess
                 highlightfirsty = y;
             } else if(highlightCount == 2) {
                 if (movePiece(highlightfirstx, highlightfirsty, x, y) && ((char.IsUpper(board[highlightfirstx, highlightfirsty]) && Whiteturn) || (char.IsLower(board[highlightfirstx, highlightfirsty]) && !Whiteturn))){
+                    promotion(highlightfirstx, highlightfirsty, y);
                     char piece = board[highlightfirstx, highlightfirsty];
                     board[highlightfirstx, highlightfirsty] = '.';
                     board[x, y] = piece;
@@ -83,8 +79,7 @@ namespace WChess
             panel1.Invalidate();
         }
         
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
+        private void panel1_Paint(object sender, PaintEventArgs e) {
             Graphics g = e.Graphics;
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
@@ -181,7 +176,8 @@ namespace WChess
             for(int i = 0; i < 8; i++) {
                 board[i, 6] = 'P';
             }
-
+            board[2, 6] = 'p';
+            /*
             board[0, 0] = 'r';
             board[1, 0] = 'n';
             board[2, 0] = 'b';
@@ -198,22 +194,10 @@ namespace WChess
             board[4, 7] = 'K';
             board[5, 7] = 'B';
             board[6, 7] = 'N';
-            board[7, 7] = 'R';
-
-        }
-
-        private void loadImages() {
-            Image KingW = Image.FromFile("KingW.png");
-            Image QueenW = Image.FromFile("QueenW.png");
-            Image QueenB = Image.FromFile("QueenB.png");
-            Image BishopW = Image.FromFile("BishopW.png");
-            Image BishopB = Image.FromFile("BishopB.png");
-            Image KnightW = Image.FromFile("KnightW.png");
-            Image KnightB = Image.FromFile("KnightB.png");
-            Image RookW = Image.FromFile("RookW.png");
-            Image RookB = Image.FromFile("RookB.png");
-            Image PawnW = Image.FromFile("PawnW.png");
-            Image PawnB = Image.FromFile("PawnB.png");
+            board[7, 7] = 'R'; 
+            */
+            Whiteturn = true;
+            lbl_TurnNotif.Text = "White Turn";
         }
 
         private bool movePiece(int fromX, int fromY, int toX, int toY) {
@@ -294,6 +278,17 @@ namespace WChess
                     }
             }
             return false;
+        }
+        
+        private void promotion(int fromX, int fromY, int toY) {
+            if((toY == 0 || toY == 7) && char.ToLower(board[fromX, fromY]) == 'p') {
+                using(var ChoosePiece = new ChoosePiece()) {
+                    if(ChoosePiece.ShowDialog() == DialogResult.OK) {
+                        char SwitchTo = ChoosePiece.toPiece;
+                        board[fromX, fromY] = SwitchTo;
+                    }
+                }
+            }
         } 
 
         private void loadBrushes() {
@@ -303,13 +298,13 @@ namespace WChess
         }
 
         private void btn_Restart_Click(object sender, EventArgs e) {
-            RestartPrompt prompt = new RestartPrompt();
-            if(prompt.ShowDialog() == DialogResult.Yes) {
-                prepareArrays();
-                panel1.Invalidate();
+            using(var RestartPrompt = new RestartPrompt()) {
+                if(RestartPrompt.ShowDialog() == DialogResult.Yes) {
+                    prepareArrays();
+                    panel1.Invalidate();
+                }
             }
             //'\u0001'
-
         }
 
     }
