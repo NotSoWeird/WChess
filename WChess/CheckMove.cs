@@ -9,13 +9,11 @@ namespace WChess
     class CheckMove
     {
         Form1 f = new WChess.Form1();
-        public CheckMove()
-        {
+        public CheckMove() {
             
         }
 
-        public bool bPawn(int fromX, int fromY, int toX, int toY, char[,] board)
-        {
+        public bool bPawn(int fromX, int fromY, int toX, int toY, char[,] board) {
             if(toY == fromY + 1) {
                 if(toX == fromX && board[toX, toY] == '.') {
                     return true;

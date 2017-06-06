@@ -50,24 +50,22 @@ namespace WChess
             int y = e.Y / 50;
             int highlightCount = 0;
 
-            if (e.Button == MouseButtons.Left)
-            {
+            if(e.Button == MouseButtons.Left) {
                 highlight[x, y] = !highlight[x, y];
             }
-            for(int i = 0; i < 8; i++)
-            {
-                for(int j = 0; j < 8; j++)
-                {
-                    if(highlight[i, j])
-                    {
+
+            for(int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {
+                    if(highlight[i, j]) {
                         highlightCount++;
                     }
                 }
             }
-            if(highlightCount == 1 ){
+
+            if(highlightCount == 1 ) {
                 highlightfirstx = x;
                 highlightfirsty = y;
-            }else if (highlightCount == 2){
+            } else if(highlightCount == 2) {
                 if (movePiece(highlightfirstx, highlightfirsty, x, y) && ((char.IsUpper(board[highlightfirstx, highlightfirsty]) && Whiteturn) || (char.IsLower(board[highlightfirstx, highlightfirsty]) && !Whiteturn))){
                     char piece = board[highlightfirstx, highlightfirsty];
                     board[highlightfirstx, highlightfirsty] = '.';
@@ -88,11 +86,10 @@ namespace WChess
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            for (int i = 0; i < 8; i++)
-            {
+            for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     if (i % 2 == 0){
-                        if (j % 2 == 0){
+                        if (j % 2 == 0) {
                             g.FillRectangle(brush[0], i * 50, j * 50, 50, 50);
                         } else {
                             g.FillRectangle(brush[1], i * 50, j * 50, 50, 50);
@@ -104,18 +101,14 @@ namespace WChess
                             g.FillRectangle(brush[0], i * 50, j * 50, 50, 50);
                         }
                     }
-                    if(highlight[i, j])
-                    {
+                    if(highlight[i, j]) {
                         g.FillRectangle(brush[2], i * 50, j * 50, 50, 50);
                     }
                 }           
             }
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (board[i, j] != '.')
-                    {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (board[i, j] != '.') {
                         switch (board[i, j])
                         {
                             case 'K':
@@ -171,28 +164,21 @@ namespace WChess
 
         }
 
-        private void prepareArrays()
-        {
-            for(int i = 0; i < 8; i++)
-            {
-                for(int j = 0; j < 8; j++)
-                {
+        private void prepareArrays() {
+            for(int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {
                     highlight[j, i] = false;
                 }
             }
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
                     board[j, i] = '.';
                 }
             }
-            for (int i = 0; i < 8; i++)
-            {
+            for (int i = 0; i < 8; i++) {
                 board[i, 1] = 'p';
             }
-            for(int i = 0; i < 8; i++)
-            {
+            for(int i = 0; i < 8; i++) {
                 board[i, 6] = 'P';
             }
 
@@ -214,11 +200,9 @@ namespace WChess
             board[6, 7] = 'N';
             board[7, 7] = 'R';
 
-
         }
 
-        private void loadImages()
-        {
+        private void loadImages() {
             Image KingW = Image.FromFile("KingW.png");
             Image QueenW = Image.FromFile("QueenW.png");
             Image QueenB = Image.FromFile("QueenB.png");
@@ -232,8 +216,7 @@ namespace WChess
             Image PawnB = Image.FromFile("PawnB.png");
         }
 
-        private bool movePiece(int fromX, int fromY, int toX, int toY)
-        {
+        private bool movePiece(int fromX, int fromY, int toX, int toY) {
             CheckMove checkMove = new CheckMove();
             char piece = board[fromX, fromY];
             switch(piece) {
@@ -313,8 +296,7 @@ namespace WChess
             return false;
         } 
 
-        private void loadBrushes()
-        {
+        private void loadBrushes() {
             brush[0] = new SolidBrush(Color.AntiqueWhite);
             brush[1] = new SolidBrush(Color.Chocolate);
             brush[2] = new SolidBrush(Color.AliceBlue);
