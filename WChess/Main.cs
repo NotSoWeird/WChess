@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WChess {
-    public partial class Form1 : Form {
+    public partial class Main : Form {
         char[,] board = new char[8, 8];
         char[,] oldboard = new char[8, 8];
         bool[,] highlight = new bool[8, 8];
+        bool ended = false;
         List<char> takenW = new List<char>();
         List<char> takenB = new List<char>();
         List<char> oldtakenW = new List<char>();
@@ -38,7 +39,7 @@ namespace WChess {
 
 
 
-        public Form1() {
+        public Main() {
             InitializeComponent();
             prepareArrays();
             loadBrushes();
@@ -46,78 +47,99 @@ namespace WChess {
         }
 
         private void pnl_Board_MouseClick(object sender, MouseEventArgs e) {
-            int x = e.X / 50;
-            int y = e.Y / 50;
-            int highlightCount = 0;
+            if(!ended) {
+                int x = e.X / 50;
+                int y = e.Y / 50;
+                int highlightCount = 0;
 
-            if(e.Button == MouseButtons.Left) {
-                highlight[x, y] = !highlight[x, y]; // Highlighta rutan/Ohighlighta rutan
-            }
+                if(e.Button == MouseButtons.Left) {
+                    highlight[x, y] = !highlight[x, y]; // Highlighta rutan/Ohighlighta rutan
+                }
 
-            for(int i = 0; i < 8; i++) {
-                for(int j = 0; j < 8; j++) {
-                    if(highlight[i, j]) {
-                        highlightCount++;
+                for(int i = 0; i < 8; i++) {
+                    for(int j = 0; j < 8; j++) {
+                        if(highlight[i, j]) {
+                            highlightCount++;
+                        }
                     }
                 }
-            }
 
-            lbl_Legality.Text = "";
+                lbl_Legality.Text = "";
 
-            if(highlightCount == 1 ) {
-                highlightfirstx = x; 
-                highlightfirsty = y;
-            } else if(highlightCount == 2) {
-                //kolla satt det är ett legalt move
-                if (checkMove.movePiece(highlightfirstx, highlightfirsty, x, y, board) && ((char.IsUpper(board[highlightfirstx, highlightfirsty]) && Whiteturn) || (char.IsLower(board[highlightfirstx, highlightfirsty]) && !Whiteturn))){
-                    for(int i = 0; i < 8; i++) {
-                        for(int j = 0; j < 8; j++) {
-                            oldboard[i, j] = board[i, j];
-                        }
-                    }
-                    
-                    checkMove.promotion(highlightfirstx, highlightfirsty, y, board);
-                    if(board[x, y] != '.') {
-                        if(char.IsUpper(board[x, y])) { // Lägg den bortagna pjäsen i en annan lista
-                            takenW.Add(board[x, y]);
-                        } else {
-                            takenB.Add(board[x, y]);
-                        }
-                    }
-                    char piece = board[highlightfirstx, highlightfirsty];
-                    board[highlightfirstx, highlightfirsty] = '.';
-                    board[x, y] = piece;
-                    Whiteturn = !Whiteturn;
-                    if((!Whiteturn && checkMove.checkMate(board) == 'K') || (Whiteturn && checkMove.checkMate(board) == 'k')) { // Kolla om Spelaren sätter sig i schack
-                        Whiteturn = !Whiteturn;
-                        if(Whiteturn) {
-                            if(takenB.Count > 0) {
-                                takenB.RemoveAt(takenB.Count - 1); // återställ om detta är fallet
-                            }
-                        } else {
-                            if(takenW.Count > 0) {
-                                takenW.RemoveAt(takenW.Count - 1); // återställ om detta är fallet
-                            }
-                        }
+                if(highlightCount == 1) {
+                    highlightfirstx = x;
+                    highlightfirsty = y;
+                } else if(highlightCount == 2) {
+                    //kolla satt det är ett legalt move
+                    if(checkMove.movePiece(highlightfirstx, highlightfirsty, x, y, board, Whiteturn)) {
                         for(int i = 0; i < 8; i++) {
                             for(int j = 0; j < 8; j++) {
-                                board[i, j] = oldboard[i, j]; // återställ om detta är fallet
+                                oldboard[i, j] = board[i, j];
                             }
                         }
-                        lbl_Legality.Text = "In Check";
-                    }
-                    if(Whiteturn) { // Säg vems tur det är
-                        lbl_TurnNotif.Text = "White Turn";
+
+                        checkMove.promotion(highlightfirstx, highlightfirsty, y, board, Whiteturn);
+                        if(board[x, y] != '.') {
+                            if(char.IsUpper(board[x, y])) { // Lägg den bortagna pjäsen i en annan lista
+                                takenW.Add(board[x, y]);
+                            } else {
+                                takenB.Add(board[x, y]);
+                            }
+                        }
+                        char piece = board[highlightfirstx, highlightfirsty];
+                        board[highlightfirstx, highlightfirsty] = '.';
+                        board[x, y] = piece;
+                        if(checkMove.castling(highlightfirstx, highlightfirsty, x, y, oldboard, Whiteturn)) { // Kollar om kungen gör en "castling" manöver 
+                            if(Whiteturn) { // Och flyttar tornet
+                                if(highlightfirstx < x) {
+                                    board[5, 7] = 'R';
+                                    board[7, 7] = '.';
+                                } else {
+                                    board[3, 7] = 'R';
+                                    board[0, 7] = '.';
+                                }
+                            } else {
+                                if(highlightfirstx < x) {
+                                    board[5, 0] = 'r';
+                                    board[7, 0] = '.';
+                                } else {
+                                    board[3, 0] = 'r';
+                                    board[0, 0] = '.';
+                                }
+                            }
+                        }
+                        Whiteturn = !Whiteturn;
+                        if((!Whiteturn && checkMove.checkMate(board) == 'K') || (Whiteturn && checkMove.checkMate(board) == 'k')) { // Kolla om Spelaren sätter sig i schack
+                            Whiteturn = !Whiteturn;
+                            if(Whiteturn) {
+                                if(takenB.Count > 0) {
+                                    takenB.RemoveAt(takenB.Count - 1); // återställ om detta är fallet
+                                }
+                            } else {
+                                if(takenW.Count > 0) {
+                                    takenW.RemoveAt(takenW.Count - 1); // återställ om detta är fallet
+                                }
+                            }
+                            for(int i = 0; i < 8; i++) {
+                                for(int j = 0; j < 8; j++) {
+                                    board[i, j] = oldboard[i, j]; // återställ om detta är fallet
+                                }
+                            }
+                            lbl_Legality.Text = "In Check";
+                        }
+                        if(Whiteturn) { // Säg vems tur det är
+                            lbl_TurnNotif.Text = "White Turn";
+                        } else {
+                            lbl_TurnNotif.Text = "Black Turn";
+                        }
                     } else {
-                        lbl_TurnNotif.Text = "Black Turn";
+                        lbl_Legality.Text = "Illegal move";
                     }
-                } else {
-                    lbl_Legality.Text = "Illegal move";
+                    highlight[x, y] = false;                                // Stäng av highlighten
+                    highlight[highlightfirstx, highlightfirsty] = false;
                 }
-                highlight[x, y] = false;                                // Stäng av highlighten
-                highlight[highlightfirstx, highlightfirsty] = false;
+                pnl_Board.Invalidate(); // Rita om brädet
             }
-            pnl_Board.Invalidate(); // Rita om brädet
         }
         
         private void pnl_Board_Paint(object sender, PaintEventArgs e) {
@@ -197,10 +219,24 @@ namespace WChess {
             //Debug
             tbx_Debug.Text = "";
             string row = "";
+            tbx_Debug.AppendText("Text board");
+            tbx_Debug.AppendText("\r\n");
             for(int i = 0; i < 8; i++) {
                 for(int j = 0; j < 8; j++) {
-                   //row += board[j, i];
+                    row += board[j, i];
+                    if(board[j, i] == '.') {
+                        row += "  ";
+                    } else {
+                        row += " ";
+                    }
                 }
+                tbx_Debug.AppendText(row);
+                tbx_Debug.AppendText("\r\n");
+                row = "";
+            }
+            tbx_Debug.AppendText("Bitboard");
+            tbx_Debug.AppendText("\r\n");
+            for(int i = 0; i < 8; i++) {
                 for(int j = 0; j < 8; j++) {
                     row += checkMove.bitboard[j, i];
                     row += " ";
@@ -210,6 +246,8 @@ namespace WChess {
                 row = "";
             }
 
+
+            
             if(checkMove.checkMate(board) == 'K') {
                 tbx_Debug.AppendText("White in check");
             } else if(checkMove.checkMate(board) == 'k') {
@@ -222,25 +260,28 @@ namespace WChess {
 
         private void pnl_Taken_Paint(object sender, PaintEventArgs e) { // Rita ut de pjäser som blivit tagna
             Graphics g = e.Graphics;
+            takenB.Sort();
+            takenW.Sort();
+
             for(int i = 0; i < takenW.Count; i++) {
                 switch(takenW[i]) {
                     case 'K':
-                        g.DrawImage(KingW, i * 15, 3, 40, 40);
+                        g.DrawImage(KingW, i * 5, 3, 40, 40);
                         break;
                     case 'Q':
-                        g.DrawImage(QueenW, i * 15, 3, 40, 40);
+                        g.DrawImage(QueenW, i * 5, 3, 40, 40);
                         break;
                     case 'B':
-                        g.DrawImage(BishopW, i * 15, 3, 40, 40);
+                        g.DrawImage(BishopW, i * 5, 3, 40, 40);
                         break;
                     case 'N':
-                        g.DrawImage(KnightW, i * 15, 3, 40, 40);
+                        g.DrawImage(KnightW, i * 5, 3, 40, 40);
                         break;
                     case 'R':
-                        g.DrawImage(RookW, i * 15, 3, 40, 40);
+                        g.DrawImage(RookW, i * 5, 3, 40, 40);
                         break;
                     case 'P':
-                        g.DrawImage(PawnW, i * 15, 3, 40, 40);
+                        g.DrawImage(PawnW, i * 5, 3, 40, 40);
                         break;
                 }
             }
@@ -248,22 +289,22 @@ namespace WChess {
             for(int i = 0; i < takenB.Count; i++) {
                 switch(takenB[i]) {
                     case 'k':
-                        g.DrawImage(KingB, i * 15, 50, 40, 40);
+                        g.DrawImage(KingB, i * 5, 50, 40, 40);
                         break;
                     case 'q':
-                        g.DrawImage(QueenB, i * 15, 50, 40, 40);
+                        g.DrawImage(QueenB, i * 5, 50, 40, 40);
                         break;
                     case 'b':
-                        g.DrawImage(BishopB, i * 15, 50, 40, 40);
+                        g.DrawImage(BishopB, i * 5, 50, 40, 40);
                         break;
                     case 'n':
-                        g.DrawImage(KnightB, i * 15, 50, 40, 40);
+                        g.DrawImage(KnightB, i * 5, 50, 40, 40);
                         break;
                     case 'r':
-                        g.DrawImage(RookB, i * 15, 50, 40, 40);
+                        g.DrawImage(RookB, i * 5, 50, 40, 40);
                         break;
                     case 'p':
-                        g.DrawImage(PawnB, i * 15, 50, 40, 40);
+                        g.DrawImage(PawnB, i * 5, 50, 40, 40);
                         break;
                 }
             }
@@ -307,7 +348,7 @@ namespace WChess {
 
             takenW.Clear();
             takenB.Clear();
-
+            ended = false;
             Whiteturn = true;
             lbl_TurnNotif.Text = "White Turn";
             checkMove.generateBitBoard(board);
@@ -322,7 +363,7 @@ namespace WChess {
 
         private void btn_Restart_Click(object sender, EventArgs e) {
             using(var RestartPrompt = new RestartPrompt()) {
-                if(RestartPrompt.ShowDialog() == DialogResult.Yes) {
+                if(RestartPrompt.ShowDialog() == DialogResult.Yes) { // Prompta och se om de säger ja om nej gör inget
                     prepareArrays();
                     pnl_Board.Invalidate();
                 }
@@ -330,5 +371,19 @@ namespace WChess {
             //'\u0001'
         }
 
+        private void btn_Resign_Click(object sender, EventArgs e) {
+            using(var Resign = new ResignPrompt()) {
+                if(Resign.ShowDialog() == DialogResult.Yes) { // Prompta och se om de säger ja om nej gör inget
+                    if(!Whiteturn) {
+                        tbx_Debug.Text = "White has won.";
+                    } else {
+                        tbx_Debug.Text = "Black has won.";
+                    }
+                    tbx_Debug.AppendText("\r\n");
+                    tbx_Debug.AppendText("Restart if you want to play again!");
+                    ended = true;
+                }
+            }
+        }
     }
 }
